@@ -1,16 +1,10 @@
-clc;
-clear;
-close all;
+function result = pso()
+  global bot  psoGlobalBestPosition
 
-%%
-L1 = Link('d', 0, 'a', 3, 'alpha', 0);
-L2 = Link('d', 0, 'a', 4, 'alpha', 0);
-bot = SerialLink([L1 L2], 'name', 'my robot');
-
+CostFunction = @(x) Cost2DLink(x);        % Cost Function
 
 %% Problem Definition
 
-CostFunction = @(x) Cost2DLink(x,bot);        % Cost Function
 
 nVar = 2;            % Number of Decision Variables
 
@@ -68,7 +62,11 @@ for i = 1:nPop
     
     % Initialize Velocity
     particle(i).Velocity = zeros(VarSize);
-    
+end
+     disp( psoGlobalBestPosition);
+     particle(1).Position = psoGlobalBestPosition;
+     particle(1).Best.Position = psoGlobalBestPosition;
+for i = 1:nPop
     % Evaluation
     particle(i).Cost = CostFunction(particle(i).Position);
     
@@ -138,7 +136,7 @@ for it = 1:MaxIt
     disp(['Iteration ' num2str(it) ': Best Cost = ' num2str(BestCost(it))]);
     
     w = w*wdamp;
-    if(BestCost(it)<1e-7)
+    if(BestCost(it)<1e-4)
         break;
     end
         
@@ -149,12 +147,12 @@ BestSol = GlobalBest;
 
 %% Results
 
-figure;
+% figure;
 %plot(BestCost, 'LineWidth', 2);
-semilogy(BestCost, 'LineWidth', 2);
-xlabel('Iteration');
-ylabel('Best Cost');
-grid on;
+% semilogy(BestCost, 'LineWidth', 2);
+% xlabel('Iteration');
+% ylabel('Best Cost');
+% grid on;
 disp("")
 disp("=======================")
 disp("    Theta_1    Theta_2");
@@ -162,7 +160,7 @@ disp(GlobalBest.Position);
 disp("=======================")
 disp(bot.fkine([GlobalBest.Position(1) GlobalBest.Position(2)]));
 EndEffectorPos = bot.fkine([GlobalBest.Position(1) GlobalBest.Position(2)]).t
-figure(2)
+% figure(2)
 % bot.plot([GlobalBest.Position(1) GlobalBest.Position(2)])
-bot.plot([0 pi/2]);
-bot.fkine([0 pi/2])
+result = [GlobalBest.Position(1) GlobalBest.Position(2)]
+end
