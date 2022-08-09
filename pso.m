@@ -1,12 +1,12 @@
 function result = pso()
   global bot  psoGlobalBestPosition
 
-CostFunction = @(x) Cost2DLink(x);        % Cost Function
+CostFunction = @(x) Cost3DLink(x);        % Cost Function
 
 %% Problem Definition
 
 
-nVar = 2;            % Number of Decision Variables
+nVar = 3;            % Number of Decision Variables
 
 VarSize = [1 nVar];   % Size of Decision Variables Matrix
 
@@ -63,9 +63,9 @@ for i = 1:nPop
     % Initialize Velocity
     particle(i).Velocity = zeros(VarSize);
 end
-     disp( psoGlobalBestPosition);
-     particle(1).Position = psoGlobalBestPosition;
-     particle(1).Best.Position = psoGlobalBestPosition;
+%      disp( psoGlobalBestPosition);
+%      particle(1).Position = psoGlobalBestPosition;
+%      particle(1).Best.Position = psoGlobalBestPosition;
 for i = 1:nPop
     % Evaluation
     particle(i).Cost = CostFunction(particle(i).Position);
@@ -158,9 +158,9 @@ disp("=======================")
 disp("    Theta_1    Theta_2");
 disp(GlobalBest.Position);
 disp("=======================")
-disp(bot.fkine([GlobalBest.Position(1) GlobalBest.Position(2)]));
-EndEffectorPos = bot.fkine([GlobalBest.Position(1) GlobalBest.Position(2)]).t
+disp(bot.fkine([GlobalBest.Position(1) GlobalBest.Position(2) GlobalBest.Position(3)]));
+EndEffectorPos = bot.fkine([GlobalBest.Position(1) GlobalBest.Position(2) GlobalBest.Position(3)]).t
 % figure(2)
 % bot.plot([GlobalBest.Position(1) GlobalBest.Position(2)])
-result = [GlobalBest.Position(1) GlobalBest.Position(2)]
+result = [GlobalBest.Position(1) GlobalBest.Position(2) GlobalBest.Position(3)]
 end
